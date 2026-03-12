@@ -28,9 +28,10 @@ app.get('/notes', (req, res) => {
   res.status(200).json({ message: 'Retrieved all notes' });
 });
 // Note by id route
-app.get('/notes/:id', (req, res) => {
-  const { id } = req.params;
-  res.status(200).json({ message: `Retrieved note with ID: ${id}` });
+app.get('/notes/:noteId', (req, res) => {
+  const { noteId } = req.params;
+
+  res.status(200).json({ message: `Retrieved note with ID: ${noteId}` });
 });
 
 // Testing error handling route
