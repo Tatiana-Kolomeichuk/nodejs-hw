@@ -22,5 +22,6 @@ const noteSchema = new Schema(
   { timestamps: true } // автоматично додає поля createdAt та updatedAt
 );
 
+noteSchema.index({ title: 'text', content: 'text' });
 
 export const Note = model('Note', noteSchema);
