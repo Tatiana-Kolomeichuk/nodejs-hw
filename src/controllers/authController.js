@@ -1,9 +1,9 @@
 import createHttpError from 'http-errors';
 import { User } from '../models/user.js';
 import bcrypt from 'bcrypt';
-import { createSession } from '../services/auth.js';
+import { createSession, setSessionCookies } from '../services/auth.js';
 import { Session } from '../models/session.js';
-import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/time.js';
+
 
 export const registerUser = async (req, res) => {
   const { email, password } = req.body;
@@ -23,7 +23,7 @@ export const registerUser = async (req, res) => {
   const newSession = await createSession(newUser._id);
   setSessionCookies(res, newSession);
 
-  res.status(201).json({ newUser });
+  res.status(201).json(newUser);
 };
 
 export const loginUser = async (req, res) => {
@@ -47,30 +47,8 @@ export const loginUser = async (req, res) => {
   res.status(200).json(user);
 };
 
-export const setSessionCookies = (res, session) => {
-  res.cookie('accessToken', session.accessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    maxAge: FIFTEEN_MINUTES,
-  });
 
-  res.cookie('refreshToken', session.refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    maxAge: ONE_DAY,
-  });
-
-  res.cookie('sessionId', session._id, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    maxAge: ONE_DAY,
-  });
-};
-
-export const LogoutUser = async (req, res) => {
+export const logoutUser = async (req, res) => {
   const { sessionId } = req.cookies;
 
   if (sessionId) {
